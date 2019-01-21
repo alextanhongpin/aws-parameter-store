@@ -8,6 +8,11 @@ Use Parameter store to centralize all your configurations and sensitive keys. Wi
 - no more sending sensitive credentials through Slack/Email (very bad practice)
 - easy integration as AWS SDK is available for multiple clients
 
+## Comparison with AWS Secrets Manager
+
+- it's free!
+- cannot rotate credentials (but can still be done at code level manually)
+
 ## IAM Policy
 
 Create two inline policy, `kms-read-access`:
@@ -129,4 +134,46 @@ Output:
         }
     ]
 }
+```
+
+
+## Node.js Sample
+
+```
+const AWS = require('aws-sdk')
+async function main() {
+  const ssm = new AWS.SSM()
+  const params = {
+    Names: ['rds.db.staging'],
+    WithDecryption: true
+  }
+  ssm.getParameters(params, (err, data) => {
+    if (err) {
+      console.log(err, err.stack)
+      return
+    }
+    const config = data.Parameters.map((param) => {
+      return {
+        key: param.Name,
+        value: param.Value
+      }
+    }).reduce((cfg, item) => {
+      cfg[item.key] = item.value
+        return cfg
+    }, {})
+    console.log(config)
+  })
+}
+
+
+// { Parameters:
+//    [ { Name: 'env_name',
+//        Type: 'SecureString',
+//        Value: 'hello world',
+//        Version: 1,
+//        LastModifiedDate: 2019-01-21T09:28:49.585Z,
+//        ARN:
+//         'arn:aws:ssm:ap-southeast-1:xxx:parameter/xxx' } ],
+//   InvalidParameters: [] }
+main().catch(console.error)
 ```
