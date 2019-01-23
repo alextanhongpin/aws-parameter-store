@@ -177,3 +177,18 @@ async function main() {
 //   InvalidParameters: [] }
 main().catch(console.error)
 ```
+
+## Label for versioning/rotating keys
+
+https://aws.amazon.com/blogs/mt/use-parameter-labels-for-easy-configuration-update-across-environments/
+https://hackernoon.com/a-few-tips-for-storing-secrets-using-aws-parameter-store-f03557c5cf1b
+
+## Naming convention
+
+Subject to change:
+
+```
+/$environment_name/databases/$database_name/{host,port,pass,user} 
+                  /databags/$service_name/{all,my,server,creds}
+                  /other_sensitive_info/{foo,bar,baz}
+```
