@@ -139,7 +139,11 @@ Output:
 
 ## Node.js Sample
 
-```
+Note that instead of passing the configs at the UI Console, we are now pulling them through the SDK during runtime. This is definitely more secure, but if you are running them locally in development, consider caching them in a file or just use local `.env` files for faster development time. 
+
+Another alternative is to store the whole config in a S3 Bucket and set the IAM roles to be accessible only to the application or user.
+
+```js
 const AWS = require('aws-sdk')
 async function main() {
   const ssm = new AWS.SSM()
